@@ -1,0 +1,9 @@
+spring.jpa.hibernate.ddl-auto=create
+spring.jpa.show-sql=true
+
+jwt.secret=jwt_frase_secreta_xd
+
+# swagger ui
+springdoc.paths-to-match=/api/**
+
+# TODO: add mysql config
