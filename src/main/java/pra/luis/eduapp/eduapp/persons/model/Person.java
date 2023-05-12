@@ -72,4 +72,13 @@ public class Person {
         this.phoneNumber = phoneNumber;
         this.address = address;
     }
+
+    public void updateProperties(Person updatedPerson){
+        this.firstName = updatedPerson.firstName;
+        this.lastName = updatedPerson.lastName;
+        this.birthDate = updatedPerson.birthDate;
+        this.email = updatedPerson.email;
+        this.phoneNumber = updatedPerson.phoneNumber;
+        this.address = updatedPerson.address;
+    }
 }

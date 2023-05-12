@@ -5,7 +5,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -14,14 +13,13 @@ import pra.luis.eduapp.eduapp.auth.model.User;
 import pra.luis.eduapp.eduapp.auth.model.UserDTO;
 import pra.luis.eduapp.eduapp.auth.service.UserService;
 import pra.luis.eduapp.eduapp.persons.model.Person;
-import pra.luis.eduapp.eduapp.persons.model.PersonDTO;
+import pra.luis.eduapp.eduapp.persons.model.ExtendedPersonDTO;
 import pra.luis.eduapp.eduapp.persons.repository.PersonRepository;
 import pra.luis.eduapp.eduapp.programmes.model.Programme;
 import pra.luis.eduapp.eduapp.programmes.services.ProgrammeService;
 import pra.luis.eduapp.eduapp.utils.EntityWithExistingFieldException;
 import pra.luis.eduapp.eduapp.utils.MyStringUtils;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -39,16 +37,24 @@ public class PersonService {
 
     @Transactional(propagation = Propagation.REQUIRED,
             rollbackFor = { EntityWithExistingFieldException.class, EntityNotFoundException.class })
-    public Person insert(PersonDTO personDTO) throws EntityWithExistingFieldException {
-        if(isEmailAlreadyRegistered(personDTO.getEmail()))
-            throw new EntityWithExistingFieldException("The email "+personDTO.getEmail()+" is already registered");
-        User newUser = generateAndInsertUser(personDTO.getFirstName(), personDTO.getLastName(), personDTO.getRoles());
-        Person newPerson = generatePerson(personDTO, newUser);
+    public Person insert(ExtendedPersonDTO extendedPersonDTO) throws EntityWithExistingFieldException {
+        if(isEmailAlreadyRegistered(extendedPersonDTO.getEmail()))
+            throw new EntityWithExistingFieldException("The email "+ extendedPersonDTO.getEmail()+" is already registered");
+        User newUser = generateAndInsertUser(extendedPersonDTO.getFirstName(), extendedPersonDTO.getLastName(), extendedPersonDTO.getRoles());
+        Person newPerson = generatePerson(extendedPersonDTO, newUser);
         return personRepository.save(newPerson);
     }
 
     public Page<Person> findAll(Specification<Person> spec, Pageable pageable){
         return personRepository.findAll(spec, Objects.requireNonNullElseGet(pageable, Pageable::unpaged));
+    }
+
+    public Person update(int personId, Person updatedPerson){
+        return personRepository.findById(personId)
+                .map( person -> {
+                    person.updateProperties(updatedPerson);
+                    return personRepository.save(person);
+                }).orElseThrow(() -> new EntityNotFoundException("Can't update unregistered person"));
     }
 
     public Optional<Person> getById(int id){
@@ -63,12 +69,12 @@ public class PersonService {
         UserDTO user = new UserDTO(credentials[0], credentials[1], roles);
         return userService.insertUserWithRoles(user);
     }
-    private Person generatePerson(PersonDTO personDTO, User newUser){
-        Person newPerson = personDTO.toPersonObject();
+    private Person generatePerson(ExtendedPersonDTO extendedPersonDTO, User newUser){
+        Person newPerson = extendedPersonDTO.toPersonObject();
         newPerson.setUser(newUser);
-        Programme programme = programmeService.findById(personDTO.getProgrammeId())
+        Programme programme = programmeService.findById(extendedPersonDTO.getProgrammeId())
                 .orElseThrow(() ->
-                        new EntityNotFoundException("Unable to find programme with id '"+personDTO.getProgrammeId()+"'"));
+                        new EntityNotFoundException("Unable to find programme with id '"+ extendedPersonDTO.getProgrammeId()+"'"));
         newPerson.setProgramme(programme);
         return newPerson;
     }

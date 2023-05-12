@@ -8,6 +8,7 @@ import lombok.Setter;
 import pra.luis.eduapp.eduapp.persons.model.Person;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Setter
@@ -40,13 +41,41 @@ public class User {
     public User() {
     }
 
+    public User(int id, String username, String password) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+    }
+
     public User(String username, String password) {
         this.username = username;
         this.password = password;
     }
 
+    public User(User user){
+        this.id = user.id;
+        this.username = user.username;
+        this.password = user.password;
+        this.roles = user.roles;
+        this.person = user.person;
+    }
+
     @Override
     public String toString() {
         return username;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id && Objects.equals(username, user.username)
+                && Objects.equals(password, user.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, password, roles, person);
     }
 }

@@ -1,7 +1,5 @@
 package pra.luis.eduapp.eduapp.utils;
 
-import javax.naming.AuthenticationException;
-
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +17,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.security.access.AccessDeniedException;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
@@ -26,7 +25,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	// HANDLERS
 
-	
 	@Override
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
 			HttpHeaders headers, HttpStatusCode status, WebRequest request) {
@@ -60,17 +58,24 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 		return generateHandlerWithMessage(HttpStatus.UNAUTHORIZED, ex.getMessage());
 	}
 
-	@ExceptionHandler(Exception.class)
-	protected ResponseEntity<Object> handleDefault(Exception ex) {
-		System.err.print("UNHANDLED EXCEPTION: "+ex.getClass());
-		return generateHandlerWithMessage(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
-	}
-	
 	@ExceptionHandler(EntityWithExistingFieldException.class)
 	protected ResponseEntity<Object> handleEntityWithExistingFieldException(EntityWithExistingFieldException ex) {
 		return generateHandlerWithMessage(HttpStatus.CONFLICT, ex.getMessage());
 	}
-	
+
+	@ExceptionHandler(AccessDeniedException.class)
+	protected ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex) {
+		return generateHandlerWithMessage(HttpStatus.UNAUTHORIZED,
+				"Access Denied: You don't have the required permissions.");
+	}
+
+	@ExceptionHandler(Exception.class)
+	protected ResponseEntity<Object> handleDefault(Exception ex) {
+		System.err.print("UNHANDLED EXCEPTION: "+ex.getClass());
+		ex.printStackTrace();
+		return generateHandlerWithMessage(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+	}
+
 	// Methods
 	
 	private ResponseEntity<Object> buildResponseEntity(ApiError apiError) {

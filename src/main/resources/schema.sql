@@ -1,3 +1,11 @@
+-- DROP ALL TABLES
+
+SET FOREIGN_KEY_CHECKS = 0;
+
+DROP TABLE IF EXISTS persons, programmes, roles, users, users_has_roles;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
 -- SCHEMA CREATION
 
 CREATE TABLE roles (
@@ -21,6 +29,7 @@ CREATE TABLE users_has_roles (
 CREATE TABLE programmes (
   programme_id INT(3) NOT NULL AUTO_INCREMENT,
   name VARCHAR(100) NOT NULL,
+  logo_url VARCHAR(150),
   CONSTRAINT pro_pk_pid PRIMARY KEY (programme_id)
 );
 

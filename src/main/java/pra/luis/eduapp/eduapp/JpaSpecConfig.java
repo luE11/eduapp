@@ -8,6 +8,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
+/**
+ * Argument resolver for injecting specification object as request query parameter
+ */
 @Configuration
 @EnableJpaRepositories
 public class JpaSpecConfig implements WebMvcConfigurer {

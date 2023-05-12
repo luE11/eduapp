@@ -1,7 +1,6 @@
 package pra.luis.eduapp.eduapp.persons.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import net.kaczmarzyk.spring.data.jpa.domain.Like;
@@ -12,9 +11,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import pra.luis.eduapp.eduapp.persons.model.BasePersonDTO;
 import pra.luis.eduapp.eduapp.persons.model.Person;
+import pra.luis.eduapp.eduapp.persons.model.ExtendedPersonDTO;
 import pra.luis.eduapp.eduapp.persons.model.PersonDTO;
 import pra.luis.eduapp.eduapp.persons.service.PersonService;
 import pra.luis.eduapp.eduapp.utils.EntityWithExistingFieldException;
@@ -40,23 +42,36 @@ public class PersonController {
 
     @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping
-    @RolesAllowed(value = "Admin")
-    public EntityModel<Person> insert(@RequestBody @Valid PersonDTO personDTO) throws EntityWithExistingFieldException {
-        Person newPerson = personService.insert(personDTO);
+    @PreAuthorize("hasAuthority('Admin')")
+    public EntityModel<Person> insert(@RequestBody @Valid ExtendedPersonDTO extendedPersonDTO) throws EntityWithExistingFieldException {
+        Person newPerson = personService.insert(extendedPersonDTO);
         return EntityModel.of(newPerson,
                 linkTo(methodOn(PersonController.class).get(newPerson.getId(), null)).withSelfRel());
     }
 
     @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping
-    @RolesAllowed(value = "Admin")
-    public CollectionModel<Person> getAll(@And({
+    @PreAuthorize("hasAuthority('Admin')")
+    public CollectionModel<Person> getAll(
+        @And({
             @Spec(path = "firstName", params = "firstName", spec = Like.class),
             @Spec(path = "lastName", params = "lastName", spec = Like.class),
             @Spec(path = "birthDate", params = "birthDate", spec = Like.class)
-    }) Specification<Person> spec, Pageable pageable){
+        }) Specification<Person> spec, Pageable pageable){
         return CollectionModel.of(personService.findAll(spec, pageable),
                 linkTo(methodOn(PersonController.class).getAll(spec, pageable)).withSelfRel());
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PutMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('Admin')")
+    public EntityModel<Person> update(@PathVariable(name = "id", required = false) Integer personId,
+                                      @RequestBody @Valid PersonDTO updatePersonDTO){
+        Person updatedPerson = personService.update(personId, updatePersonDTO.toPersonObject());
+        return EntityModel.of(updatedPerson,
+                linkTo(methodOn(PersonController.class).update(personId, updatePersonDTO)).withSelfRel(),
+                linkTo(methodOn(PersonController.class).get(personId, null)).withRel("user"),
+                linkTo(methodOn(PersonController.class).getAll(null, null)).withRel("users"));
     }
 
     private int getPersonIdFromAuth(Authentication authentication){

@@ -3,10 +3,14 @@ package pra.luis.eduapp.eduapp.programmes.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import pra.luis.eduapp.eduapp.persons.model.Person;
 
 import java.util.Set;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "programmes")
 public class Programme {
@@ -16,6 +20,7 @@ public class Programme {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     protected int id;
     protected String name;
+    protected String logo_url;
 
     @JsonIgnore
     @OneToMany(mappedBy="programme", targetEntity = Person.class)
