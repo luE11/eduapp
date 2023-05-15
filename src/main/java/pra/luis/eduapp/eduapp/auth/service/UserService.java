@@ -1,7 +1,5 @@
 package pra.luis.eduapp.eduapp.auth.service;
 
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,19 +14,20 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-/**
- * RequiredArgsConstructor.. Constructor with just required properties as final, @notnull etc
- */
-@AllArgsConstructor
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Lazy
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    public UserService(UserRepository userRepository,
+                       RoleRepository roleRepository,
+                       @Lazy BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
 
     public User insert(User user) throws EntityWithExistingFieldException {
         if ( userRepository.existsByUsername(user.getUsername()) )

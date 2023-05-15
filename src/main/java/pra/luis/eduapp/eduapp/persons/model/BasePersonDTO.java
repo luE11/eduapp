@@ -34,7 +34,7 @@ public abstract class BasePersonDTO {
     @JsonProperty(value = "address")
     protected String address;
 
-    public BasePersonDTO() { } // TODO: HttpMessageConversionException. Search update crud with dto example
+    public BasePersonDTO() { }
 
     public BasePersonDTO(String firstName, String lastName, Date birthDate, String email, String phoneNumber, String address) {
         this.firstName = firstName;

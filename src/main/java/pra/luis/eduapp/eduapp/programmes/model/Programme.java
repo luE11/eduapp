@@ -20,12 +20,21 @@ public class Programme {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     protected int id;
     protected String name;
-    protected String logo_url;
+    protected String logoUrl;
 
     @JsonIgnore
     @OneToMany(mappedBy="programme", targetEntity = Person.class)
     protected Set<Person> persons;
 
     public Programme() {
+    }
+
+    public Programme(String name) {
+        this.name = name;
+    }
+
+    public Programme(String name, String logoUrl) {
+        this.name = name;
+        this.logoUrl = logoUrl;
     }
 }

@@ -33,7 +33,7 @@ public class EduappApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String...args) throws Exception {
-		//createTestUser();
+		createTestUser();
 	}
 
 
