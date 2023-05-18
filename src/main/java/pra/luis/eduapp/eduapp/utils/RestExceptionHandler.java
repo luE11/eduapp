@@ -37,7 +37,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return generateHandlerWithErrorsAndMessage(HttpStatus.BAD_REQUEST, "Argument not valid", ex);
     }
 
-	
 	@ExceptionHandler(EntityNotFoundException.class)
 	protected ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException ex) {
 		return generateHandlerWithMessage(HttpStatus.NOT_FOUND, ex.getMessage());
@@ -68,6 +67,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 		return generateHandlerWithMessage(HttpStatus.UNAUTHORIZED,
 				"Access Denied: You don't have the required permissions.");
 	}
+
+	@ExceptionHandler(TokenRefreshException.class)
+	protected ResponseEntity<Object> handleTokenRefreshException(TokenRefreshException ex) {
+		return generateHandlerWithMessage(HttpStatus.UNAUTHORIZED, ex.getMessage());
+	}
+
+	// DEFAULT HANDLER
 
 	@ExceptionHandler(Exception.class)
 	protected ResponseEntity<Object> handleDefault(Exception ex) {

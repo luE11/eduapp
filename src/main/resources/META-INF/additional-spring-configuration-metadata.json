@@ -4,6 +4,14 @@
       "name": "jwt.secret",
       "description": "jwt",
       "type": "java.lang.String"
+    }, {
+      "name": "jwt.jwtExpirationMs",
+      "description": "jwt expiration time",
+      "type": "java.lang.Long"
+    }, {
+      "name": "jwt.jwtRefreshExpirationMs",
+      "description": "jwt refresh expiration time",
+      "type": "java.lang.Long"
     }
   ]
 }

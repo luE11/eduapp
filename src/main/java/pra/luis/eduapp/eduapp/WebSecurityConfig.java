@@ -51,9 +51,10 @@ public class WebSecurityConfig {
                 .exceptionHandling(handling -> handling.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests()
+                .requestMatchers(HttpMethod.GET, "/api/auth/refreshtoken").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
                 .requestMatchers( "/files-upload/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/user/").permitAll()
+                //.requestMatchers(HttpMethod.POST, "/api/user/").permitAll()
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/v3/**").permitAll()
                 .anyRequest().authenticated();

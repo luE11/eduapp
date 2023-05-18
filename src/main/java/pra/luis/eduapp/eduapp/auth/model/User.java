@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import pra.luis.eduapp.eduapp.persons.model.Person;
-
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -38,6 +37,10 @@ public class User {
     @JsonIgnore
     protected Person person;
 
+    @OneToOne(mappedBy = "user")
+    @JsonIgnore
+    protected RefreshToken refreshToken;
+
     public User() {
     }
 
@@ -58,6 +61,13 @@ public class User {
         this.password = user.password;
         this.roles = user.roles;
         this.person = user.person;
+        this.refreshToken = user.refreshToken;
+    }
+
+    public String[] getRolesAsStringArray(){
+        return roles.stream()
+                .map(Role::toString)
+                .toArray(String[]::new);
     }
 
     @Override

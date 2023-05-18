@@ -36,10 +36,11 @@ public class WebGeneralConfig implements WebMvcConfigurer {
                 .addResourceHandler("/files-upload/**")
                 .addResourceLocations("file:files-upload/");
     }
-
+    // TODO: commit and create refresh token on cookie https://www.bezkoder.com/spring-boot-refresh-token-jwt/#Refresh_Token_Request_and_Response
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/**")
+        registry.addMapping("/api/**") // TODO: Test refresh token service
+                .allowCredentials(true) // auth from cookie ... Used for refresh token cookie
                 .allowedOrigins("http://localhost:4200");
     }
 }

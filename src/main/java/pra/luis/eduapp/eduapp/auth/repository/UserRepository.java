@@ -7,6 +7,6 @@ import pra.luis.eduapp.eduapp.auth.model.User;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
-    Optional<User> findByUsername(@Param("username") String username);
-    boolean existsByUsername(@Param("username") String username);
+    Optional<User> findByUsername(String username); //removed @Param annotation
+    boolean existsByUsername(String username);
 }

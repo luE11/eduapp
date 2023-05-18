@@ -3,6 +3,7 @@ package pra.luis.eduapp.eduapp.auth.service;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 import pra.luis.eduapp.eduapp.auth.model.Role;
 import pra.luis.eduapp.eduapp.auth.model.User;
 import pra.luis.eduapp.eduapp.auth.model.UserDTO;
@@ -36,6 +37,11 @@ public class UserService {
         User newUser = new User(user);
         newUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         return userRepository.save(newUser);
+    }
+
+    public User findById(int userId){
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Can't find user with id "+userId));
     }
 
     public Optional<User> findByUsername(String username){

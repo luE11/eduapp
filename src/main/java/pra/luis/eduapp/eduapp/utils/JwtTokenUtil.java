@@ -1,4 +1,4 @@
-package pra.luis.eduapp.eduapp;
+package pra.luis.eduapp.eduapp.utils;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -25,7 +24,8 @@ public class JwtTokenUtil implements Serializable {
 
 	private static final long serialVersionUID = -2550185165626007488L;
 
-	public static final long JWT_TOKEN_VALIDITY = 1 * 60 * 60; // seconds
+	@Value("${jwt.jwtExpirationMs}")
+	private long JWT_TOKEN_EXPIRATION_TIME; // seconds
 
 	private static final Logger logger = LoggerFactory.getLogger(JwtTokenUtil.class);
 	
@@ -72,9 +72,13 @@ public class JwtTokenUtil implements Serializable {
 		return Jwts
 				.builder()
 				.setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
+				.setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_EXPIRATION_TIME))
 				.signWith(SignatureAlgorithm.HS512, secret)
 				.compact();
+	}
+
+	private Date getTokenExpirationDate(String token){
+		return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getExpiration();
 	}
 
 	//validate token
@@ -85,7 +89,7 @@ public class JwtTokenUtil implements Serializable {
 	
 	public boolean validateJwtToken(String authToken) {
 		try {
-			Jwts.parser().setSigningKey(secret).parseClaimsJws(authToken);
+			Jwts.parser().setSigningKey(secret).parseClaimsJws(authToken).getBody();
 			return true;
 		} catch (SignatureException e) {
 			logger.error("Invalid JWT signature: {}", e.getMessage());

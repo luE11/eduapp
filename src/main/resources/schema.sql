@@ -10,7 +10,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE roles (
   role_id INT(11) NOT NULL AUTO_INCREMENT,
-  name VARCHAR(30) DEFAULT NULL,
+  name VARCHAR(30) NOT NULL,
   CONSTRAINT role_pk_rid PRIMARY KEY (role_id)
 );
 
@@ -24,6 +24,14 @@ CREATE TABLE users (
 CREATE TABLE users_has_roles (
   user_id INT(11) NOT NULL,
   role_id INT(11) NOT NULL
+);
+
+CREATE TABLE refresh_tokens (
+  token_id INT(11) NOT NULL AUTO_INCREMENT,
+  token VARCHAR(100) NOT NULL,
+  expiration_date DATETIME NOT NULL,
+  user_id INT(11) NOT NULL,
+  CONSTRAINT rto_pk_tid PRIMARY KEY (token_id)
 );
 
 CREATE TABLE programmes (
@@ -48,12 +56,15 @@ CREATE TABLE persons (
 
 -- ALTERS
 
+-- ROLES
 ALTER TABLE roles ADD
   CONSTRAINT rol_uq_nam UNIQUE (name);
 
+-- USERS
 ALTER TABLE users ADD
   CONSTRAINT use_uq_nam UNIQUE (username);
 
+-- USERS_HAS_ROLES
 ALTER TABLE users_has_roles ADD
   CONSTRAINT uhr_fk_uid FOREIGN KEY (user_id)
 	REFERENCES users(user_id);
@@ -61,9 +72,19 @@ ALTER TABLE users_has_roles ADD
   CONSTRAINT uhr_fk_rid FOREIGN KEY (role_id)
     REFERENCES roles(role_id);
 
+-- REFRESH_TOKENS
+ALTER TABLE refresh_tokens ADD
+  CONSTRAINT rto_uq_tok UNIQUE (token);
+
+ALTER TABLE refresh_tokens ADD
+  CONSTRAINT rto_fk_uid FOREIGN KEY (user_id)
+	REFERENCES users(user_id);
+
+-- PROGRAMMES
 ALTER TABLE programmes ADD
   CONSTRAINT pro_uq_nam UNIQUE (name);
 
+-- PERSONS
 ALTER TABLE persons ADD
   CONSTRAINT per_uq_ema UNIQUE (email);
 
