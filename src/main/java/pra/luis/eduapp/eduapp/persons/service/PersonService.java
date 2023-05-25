@@ -1,6 +1,7 @@
 package pra.luis.eduapp.eduapp.persons.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.Join;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -9,8 +10,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import pra.luis.eduapp.eduapp.auth.model.Role;
 import pra.luis.eduapp.eduapp.auth.model.User;
 import pra.luis.eduapp.eduapp.auth.model.UserDTO;
+import pra.luis.eduapp.eduapp.auth.service.RoleService;
 import pra.luis.eduapp.eduapp.auth.service.UserService;
 import pra.luis.eduapp.eduapp.persons.model.Person;
 import pra.luis.eduapp.eduapp.persons.model.ExtendedPersonDTO;
@@ -20,17 +23,23 @@ import pra.luis.eduapp.eduapp.programmes.services.ProgrammeService;
 import pra.luis.eduapp.eduapp.utils.EntityWithExistingFieldException;
 import pra.luis.eduapp.eduapp.utils.MyStringUtils;
 
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class PersonService {
+
+    private final String ADMIN_ROLE = "Admin";
+    private final String TEACHER_ROLE = "Teacher";
+    private final String STUDENT_ROLE = "Student";
 
     @Autowired
     private PersonRepository personRepository;
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RoleService roleService;
 
     @Autowired
     private ProgrammeService programmeService;
@@ -45,8 +54,21 @@ public class PersonService {
         return personRepository.save(newPerson);
     }
 
-    public Page<Person> findAll(Specification<Person> spec, Pageable pageable){
-        return personRepository.findAll(spec, Objects.requireNonNullElseGet(pageable, Pageable::unpaged));
+    public Page<Person> findAll(Specification<Person> spec, Pageable pageable, int personId){
+        User requestUser = userService.findByPersonId(personId);
+        List<String> roles = Arrays.asList(requestUser.getRolesAsStringArray());
+        Specification<Person> personSpec = (spec!=null) ? spec: Specification.where(null);
+        if( roles.contains(ADMIN_ROLE) ){
+            return personRepository.findAll(personSpec, Objects.requireNonNullElseGet(pageable, Pageable::unpaged));
+        }else if ( roles.contains(TEACHER_ROLE) ){
+            personSpec = personSpec.and((root, query, criteriaBuilder) -> {
+                Join<User, Role> userRoles = root.join("user").join("roles");
+               return criteriaBuilder.equal(userRoles.get("name"), STUDENT_ROLE);
+            });
+            return personRepository.findAll(personSpec,
+                    Objects.requireNonNullElseGet(pageable, Pageable::unpaged));
+        }
+        return null;
     }
 
     public Person update(int personId, Person updatedPerson){

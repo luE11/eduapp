@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import pra.luis.eduapp.eduapp.persons.model.Person;
 
+import java.util.Optional;
+
 public interface PersonRepository extends JpaRepository<Person, Integer>, JpaSpecificationExecutor<Person> {
     boolean existsByEmail(@Param("email") String email);
     /*Person findFirstByFirstNameAndLastNameIgnoreCaseByOrderByIdDesc(@Param("firstName") String firstName,
@@ -25,6 +27,8 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, JpaSpe
     @Query(value = "SELECT p.id FROM User u, Person p WHERE u.id=p.user "+
             "AND LOWER(u.username)=LOWER(:username)")
     int getIdByUsername(@Param("username") String username);
+
     @NonNull
     Page<Person> findAll(Specification<Person> spec, @NonNull Pageable pageable);
+
 }

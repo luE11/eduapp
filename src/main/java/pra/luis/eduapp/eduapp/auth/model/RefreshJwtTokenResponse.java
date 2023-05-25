@@ -10,6 +10,6 @@ import java.util.Date;
 public class RefreshJwtTokenResponse {
 
     private String jwttoken;
-    private Date expirationDate;
+    private Date tokenExpirationDate;
 
 }

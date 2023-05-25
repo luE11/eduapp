@@ -44,6 +44,11 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException("Can't find user with id "+userId));
     }
 
+    public User findByPersonId(int personId){
+        return userRepository.findByPersonId(personId)
+                .orElseThrow(() -> new NotFoundException("Can't find user with person_id "+personId));
+    }
+
     public Optional<User> findByUsername(String username){
         return userRepository.findByUsername(username);
     }

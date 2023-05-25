@@ -13,6 +13,11 @@ spring:
       data-locations:
         - classpath:test-data.sql
       mode: ALWAYS
+  data:
+    web:
+      pageable:
+        # pagination starts from 1, not zero
+        one-indexed-parameters: true
 
 jwt:
   secret: jwt_frase_secreta_xd
