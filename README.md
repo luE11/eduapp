@@ -33,3 +33,5 @@ Commandos
 Al ejecutar el servidor, se puede consultar la documentación de los servicios expuestos por medio de la herramienta Swagger UI al acceder a la url: 
 
 http://localhost:8080/swagger-ui/index.html
+
+Este proyecto se desarrolla en conjunto con una aplicación cliente en Angular, cuyo repositorio se encuentra alojado en la url: https://github.com/luE11/eduappfrontend
