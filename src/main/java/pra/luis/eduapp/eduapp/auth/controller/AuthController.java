@@ -24,22 +24,16 @@ public class AuthController {
     private RefreshTokenService refreshTokenService;
 
     @Autowired
-    private AuthService authService; // TODO: springangular session cookie https://spring.io/guides/tutorials/spring-security-and-angular-js/
+    private AuthService authService;
 
     @PostMapping(value = "/")
     public ResponseEntity<EntityModel<JwtResponse>> createAuthenticationToken(@Valid @RequestBody JwtRequest authenticationRequest) {
         User user = authService.authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
         String token = authService.generateToken(authenticationRequest.getUsername());
-        // Send refreshtoken as cookie
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
-
         JwtResponse response = new JwtResponse(token, user.getId(),
                 user.getUsername(), user.getRolesAsStringArray(), authService.getTokenExpirationDate(token));
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.SET_COOKIE,
-                "refresh_token="+refreshToken.getToken()+";HttpOnly;Path=/api/auth/refreshtoken;SameSite=strict;Expires="+refreshToken.getExpirationDate());
-
+        HttpHeaders headers = generateHeadersWithRefreshTokenCookie(refreshToken);
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(
@@ -55,6 +49,13 @@ public class AuthController {
         String newToken = authService.generateToken(rToken.getUser().getUsername());
         RefreshJwtTokenResponse response = new RefreshJwtTokenResponse(newToken, authService.getTokenExpirationDate(newToken));
         return EntityModel.of(response);
+    }
+
+    public HttpHeaders generateHeadersWithRefreshTokenCookie(RefreshToken refreshToken){
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.SET_COOKIE,
+                "refresh_token="+refreshToken.getToken()+";HttpOnly;Path=/api/auth/refreshtoken;SameSite=strict;Expires="+refreshToken.getExpirationDate());
+        return headers;
     }
 
 }
