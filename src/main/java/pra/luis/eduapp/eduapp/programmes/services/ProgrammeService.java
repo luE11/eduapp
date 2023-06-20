@@ -3,12 +3,10 @@ package pra.luis.eduapp.eduapp.programmes.services;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import pra.luis.eduapp.eduapp.persons.model.Person;
 import pra.luis.eduapp.eduapp.programmes.model.Programme;
 import pra.luis.eduapp.eduapp.programmes.model.ProgrammeDTO;
 import pra.luis.eduapp.eduapp.programmes.repository.ProgrammeRepository;
@@ -28,7 +26,9 @@ public class ProgrammeService {
         return programmeRepository.findById(id);
     }
 
-    public Page<Programme> findAll(Specification<Person> spec, @NonNull Pageable pageable) {
+
+
+    public Page<Programme> findAll(Specification<Programme> spec, @NonNull Pageable pageable) {
         return programmeRepository.findAll(spec, pageable);
     }
 

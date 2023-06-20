@@ -1,4 +1,4 @@
-package pra.luis.eduapp.eduapp.persons.model;
+package pra.luis.eduapp.eduapp.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,12 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class PersonListResponse {
-    private List<Person> personList;
+public class EntityListResponse <T> {
+
+    private List<T> result;
+    private int page;
+    private int size;
     private int totalPages;
     private Long totalRecords;
+
 }

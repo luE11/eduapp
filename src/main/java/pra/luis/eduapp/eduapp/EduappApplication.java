@@ -28,6 +28,7 @@ public class EduappApplication implements CommandLineRunner {
 		}catch (Exception e){
 			System.err.println(e.getMessage());
 			System.err.println("Persona ya registrada. Omitiendo...");
+			System.err.println("]1sO-$N/*#");
 		}
 	}
 
