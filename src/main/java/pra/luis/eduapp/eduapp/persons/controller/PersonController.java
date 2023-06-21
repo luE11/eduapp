@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -19,8 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import pra.luis.eduapp.eduapp.persons.model.Person;
 import pra.luis.eduapp.eduapp.persons.model.ExtendedPersonDTO;
 import pra.luis.eduapp.eduapp.persons.model.PersonDTO;
-import pra.luis.eduapp.eduapp.persons.model.PersonListResponse;
 import pra.luis.eduapp.eduapp.persons.service.PersonService;
+import pra.luis.eduapp.eduapp.utils.EntityListResponse;
 import pra.luis.eduapp.eduapp.utils.EntityWithExistingFieldException;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -54,15 +53,15 @@ public class PersonController {
     @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping
     @PreAuthorize("hasAuthority('Admin')")
-    public EntityModel<PersonListResponse> getAll(
+    public EntityModel<EntityListResponse<Person>> getAll(
             @And({
             @Spec(path = "firstName", params = "firstName", spec = Like.class),
             @Spec(path = "lastName", params = "lastName", spec = Like.class),
             @Spec(path = "email", params = "email", spec = Like.class)
         }) Specification<Person> spec, Pageable pageable, Authentication auth){
         Page<Person> results = personService.findAll(spec, pageable, getPersonIdFromAuth(auth));
-        return EntityModel.of(new PersonListResponse(results.getContent(),
-                        results.getTotalPages(), results.getTotalElements()),
+        return EntityModel.of(new EntityListResponse<>(results.getContent(), pageable.getPageNumber(),
+                        pageable.getPageSize(), results.getTotalPages(), results.getTotalElements()),
                 linkTo(methodOn(PersonController.class).getAll(spec, pageable, auth)).withSelfRel());
     }
 
