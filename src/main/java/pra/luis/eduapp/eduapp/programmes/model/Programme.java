@@ -37,4 +37,12 @@ public class Programme {
         this.name = name;
         this.logoUrl = logoUrl;
     }
+
+    @Override
+    public String toString() {
+        return "Programme{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
