@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import pra.luis.eduapp.eduapp.persons.model.Person;
+import pra.luis.eduapp.eduapp.subjects.model.Subject;
 
 import java.util.Set;
 
@@ -25,6 +26,10 @@ public class Programme {
     @JsonIgnore
     @OneToMany(mappedBy="programme", targetEntity = Person.class)
     protected Set<Person> persons;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "programme")
+    protected Subject subject;
 
     public Programme() {
     }

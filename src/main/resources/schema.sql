@@ -54,6 +54,14 @@ CREATE TABLE persons (
   CONSTRAINT per_pk_pid PRIMARY KEY (person_id)
 );
 
+CREATE TABLE subjects (
+  subject_id INT(11) NOT NULL AUTO_INCREMENT,
+  subject_name VARCHAR(100) NOT NULL,
+  credits INT(1),
+  programme_id INT(3) NOT NULL,
+  CONSTRAINT sub_pk_sid PRIMARY KEY (subject_id)
+);
+
 -- ALTERS
 
 -- ROLES
@@ -93,4 +101,11 @@ ALTER TABLE persons ADD
     REFERENCES users(user_id);
 ALTER TABLE persons ADD
   CONSTRAINT per_fk_pid FOREIGN KEY (programme_id)
+    REFERENCES programmes(programme_id);
+
+ALTER TABLE subjects ADD
+  CONSTRAINT sub_uq_sna UNIQUE (subject_name);
+
+ALTER TABLE subjects ADD
+  CONSTRAINT sub_fk_pid FOREIGN KEY (programme_id)
     REFERENCES programmes(programme_id);
