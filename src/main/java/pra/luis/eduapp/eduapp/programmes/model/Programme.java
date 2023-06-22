@@ -43,6 +43,10 @@ public class Programme {
         this.logoUrl = logoUrl;
     }
 
+    public void updateProperties(Programme programme){
+        this.name = programme.getName();
+    }
+
     @Override
     public String toString() {
         return "Programme{" +

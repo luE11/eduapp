@@ -58,7 +58,9 @@ CREATE TABLE subjects (
   subject_id INT(11) NOT NULL AUTO_INCREMENT,
   subject_name VARCHAR(100) NOT NULL,
   credits INT(1),
+  can_subscribe TINYINT(1) NOT NULL DEFAULT 0,
   programme_id INT(3) NOT NULL,
+  requiredsubject_id INT(11),
   CONSTRAINT sub_pk_sid PRIMARY KEY (subject_id)
 );
 
@@ -109,3 +111,6 @@ ALTER TABLE subjects ADD
 ALTER TABLE subjects ADD
   CONSTRAINT sub_fk_pid FOREIGN KEY (programme_id)
     REFERENCES programmes(programme_id);
+ALTER TABLE subjects ADD
+  CONSTRAINT sub_fk_rsi FOREIGN KEY (requiredsubject_id)
+    REFERENCES subjects(subject_id);

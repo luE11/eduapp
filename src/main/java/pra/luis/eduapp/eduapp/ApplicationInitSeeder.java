@@ -13,13 +13,14 @@ public class ApplicationInitSeeder implements CommandLineRunner {
     public PersonService personService;
 
     private void createTestUser(){
-        ExtendedPersonDTO person = new ExtendedPersonDTO(new int[]{1,2}, "Luis", "Martínez", 1);
+        ExtendedPersonDTO person = new ExtendedPersonDTO(new int[]{1,2}, "Luis",
+                "Martínez", "mail@gmail.com", 1);
         try {
-            personService.insert(person); // luis.martinez ]1sO-$N/*#
+            personService.insert(person); // luis.martinez [Bz<YQB4.V
         }catch (Exception e){
             System.err.println(e.getMessage());
             System.err.println("Persona ya registrada. Omitiendo...");
-            System.err.println("]1sO-$N/*#");
+            System.err.println("[Bz<YQB4.V");
         }
     }
 
