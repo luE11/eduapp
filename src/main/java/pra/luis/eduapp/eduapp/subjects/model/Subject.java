@@ -25,7 +25,7 @@ public class Subject {
     protected String subject_name;
     protected int credits;
     /** False by default. Indicates if a subject course can be taken by students */
-    protected boolean canSubscribe;
+    protected boolean subscribable;
     @JsonIgnore
     @OneToOne
     @JoinColumn(name = "programme_id", referencedColumnName = "programme_id", nullable = false)
@@ -38,18 +38,27 @@ public class Subject {
     @JoinColumn(name = "requiredsubject_id", referencedColumnName = "subject_id", nullable = false)
     protected Subject requiredSubject;
 
-    public Subject(String subject_name, int credits, boolean canSubscribe) {
+    public Subject(String subject_name, int credits, boolean subscribable) {
         this.subject_name = subject_name;
         this.credits = credits;
-        this.canSubscribe = canSubscribe;
+        this.subscribable = subscribable;
     }
 
-    public Subject(String subject_name, int credits, boolean canSubscribe,
+    public Subject(String subject_name, int credits, boolean subscribable,
                    Programme programme, Subject requiredSubject) {
         this.subject_name = subject_name;
         this.credits = credits;
-        this.canSubscribe = canSubscribe;
+        this.subscribable = subscribable;
         this.programme = programme;
         this.requiredSubject = requiredSubject;
+    }
+
+    /**
+     * Updates base attributes of subject by overwritting from another subject object
+     * @param subject Subject object from which attributes will be updated
+     */
+    public void updateProperties(Subject subject){
+        this.subject_name = subject.subject_name;
+        this.credits = subject.credits;
     }
 }

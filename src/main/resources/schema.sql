@@ -58,7 +58,7 @@ CREATE TABLE subjects (
   subject_id INT(11) NOT NULL AUTO_INCREMENT,
   subject_name VARCHAR(100) NOT NULL,
   credits INT(1),
-  can_subscribe TINYINT(1) NOT NULL DEFAULT 0,
+  subscribable TINYINT(1) NOT NULL DEFAULT 0,
   programme_id INT(3) NOT NULL,
   requiredsubject_id INT(11),
   CONSTRAINT sub_pk_sid PRIMARY KEY (subject_id)

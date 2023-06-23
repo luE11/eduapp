@@ -1,6 +1,5 @@
 package pra.luis.eduapp.eduapp.subjects.model;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,14 +13,14 @@ public class SubjectDTO extends BaseSubjectDTO {
     protected int programmeId;
     protected Integer requiredSubjectId;
 
-    public SubjectDTO(String subjectName, int credits, boolean canSubscribe,
+    public SubjectDTO(String subjectName, int credits, boolean subscribable,
                       int programmeId, Integer requiredSubjectId){
-        super(subjectName, credits, canSubscribe);
+        super(subjectName, credits, subscribable);
         this.programmeId = programmeId;
         this.requiredSubjectId = requiredSubjectId;
     }
 
     public Subject toSubject(){
-        return new Subject(this.subjectName, this.credits, this.canSubscribe);
+        return new Subject(this.subjectName, this.credits, this.subscribable);
     }
 }

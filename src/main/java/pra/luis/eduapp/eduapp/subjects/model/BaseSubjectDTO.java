@@ -3,6 +3,7 @@ package pra.luis.eduapp.eduapp.subjects.model;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -10,12 +11,13 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public abstract class BaseSubjectDTO {
     @NotNull(message = "subject name field is required")
     protected String subjectName;
     @NotNull(message = "credits field is required")
     protected int credits;
-    protected boolean canSubscribe = false;
+    protected boolean subscribable = false;
 
 }

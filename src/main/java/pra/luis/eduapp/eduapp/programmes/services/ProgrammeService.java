@@ -55,11 +55,11 @@ public class ProgrammeService {
     }
 
     private String getInitials(String phrase){
-        String initials = "";
+        StringBuilder initials = new StringBuilder();
         for (String s : phrase.split(" ")) {
-            initials+=s.charAt(0);
+            initials.append(s.charAt(0));
         }
-        return initials;
+        return initials.toString();
     }
 
 }
