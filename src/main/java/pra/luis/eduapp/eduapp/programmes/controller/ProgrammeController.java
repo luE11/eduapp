@@ -14,18 +14,13 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import pra.luis.eduapp.eduapp.persons.controller.PersonController;
-import pra.luis.eduapp.eduapp.persons.model.Person;
-import pra.luis.eduapp.eduapp.persons.model.PersonDTO;
 import pra.luis.eduapp.eduapp.programmes.model.FullProgrammeDTO;
 import pra.luis.eduapp.eduapp.programmes.model.Programme;
 import pra.luis.eduapp.eduapp.programmes.model.ProgrammeDTO;
 import pra.luis.eduapp.eduapp.programmes.services.ProgrammeService;
 import pra.luis.eduapp.eduapp.utils.EntityListResponse;
 import pra.luis.eduapp.eduapp.utils.EntityWithExistingFieldException;
-
 import java.io.IOException;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;

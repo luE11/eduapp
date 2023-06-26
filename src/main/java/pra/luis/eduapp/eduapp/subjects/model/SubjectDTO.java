@@ -1,5 +1,6 @@
 package pra.luis.eduapp.eduapp.subjects.model;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +11,7 @@ import lombok.Setter;
 @Setter
 public class SubjectDTO extends BaseSubjectDTO {
 
+    @NotNull(message = "ProgrammeId field is required")
     protected int programmeId;
     protected Integer requiredSubjectId;
 
