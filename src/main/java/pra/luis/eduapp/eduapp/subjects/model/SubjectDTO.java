@@ -12,11 +12,11 @@ import lombok.Setter;
 public class SubjectDTO extends BaseSubjectDTO {
 
     @NotNull(message = "ProgrammeId field is required")
-    protected int programmeId;
+    protected Integer programmeId;
     protected Integer requiredSubjectId;
 
-    public SubjectDTO(String subjectName, int credits, boolean subscribable,
-                      int programmeId, Integer requiredSubjectId){
+    public SubjectDTO(String subjectName, Integer credits, Boolean subscribable,
+                      Integer programmeId, Integer requiredSubjectId){
         super(subjectName, credits, subscribable);
         this.programmeId = programmeId;
         this.requiredSubjectId = requiredSubjectId;

@@ -17,7 +17,7 @@ public abstract class BaseSubjectDTO {
     @NotNull(message = "subject name field is required")
     protected String subjectName;
     @NotNull(message = "credits field is required")
-    protected int credits;
-    protected boolean subscribable = false;
+    protected Integer credits;
+    protected Boolean subscribable = false;
 
 }

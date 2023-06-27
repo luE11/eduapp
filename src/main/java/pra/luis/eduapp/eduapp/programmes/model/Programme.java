@@ -28,8 +28,8 @@ public class Programme {
     protected Set<Person> persons;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "programme")
-    protected Subject subject;
+    @OneToMany(mappedBy = "programme", targetEntity = Subject.class)
+    protected Set<Subject> subjects;
 
     public Programme() {
     }

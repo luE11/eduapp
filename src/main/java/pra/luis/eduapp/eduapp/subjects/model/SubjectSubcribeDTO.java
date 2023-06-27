@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public class SubjectSubcribeDTO {
     @NotNull
-    protected boolean subscribable = false;
+    protected boolean subscribable;
 
     public SubjectSubcribeDTO(){ }
 

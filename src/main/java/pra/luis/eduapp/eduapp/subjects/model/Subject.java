@@ -14,7 +14,7 @@ import pra.luis.eduapp.eduapp.programmes.model.Programme;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(of = { "id", "subject_name" })
+@ToString(of = { "id", "subjectName" })
 @Table(name = "subjects")
 public class Subject {
     @Id
@@ -22,12 +22,12 @@ public class Subject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     protected int id;
-    protected String subject_name;
+    protected String subjectName;
     protected int credits;
     /** False by default. Indicates if a subject course can be taken by students */
     protected boolean subscribable;
     @JsonIgnore
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "programme_id", referencedColumnName = "programme_id", nullable = false)
     protected Programme programme;
     /**
@@ -35,18 +35,18 @@ public class Subject {
      */
     @JsonIgnore
     @OneToOne
-    @JoinColumn(name = "requiredsubject_id", referencedColumnName = "subject_id", nullable = false)
+    @JoinColumn(name = "requiredsubject_id", referencedColumnName = "subject_id")
     protected Subject requiredSubject;
 
-    public Subject(String subject_name, int credits, boolean subscribable) {
-        this.subject_name = subject_name;
+    public Subject(String subjectName, int credits, boolean subscribable) {
+        this.subjectName = subjectName;
         this.credits = credits;
         this.subscribable = subscribable;
     }
 
-    public Subject(String subject_name, int credits, boolean subscribable,
+    public Subject(String subjectName, int credits, boolean subscribable,
                    Programme programme, Subject requiredSubject) {
-        this.subject_name = subject_name;
+        this.subjectName = subjectName;
         this.credits = credits;
         this.subscribable = subscribable;
         this.programme = programme;
@@ -58,7 +58,7 @@ public class Subject {
      * @param subject Subject object from which attributes will be updated
      */
     public void updateProperties(Subject subject){
-        this.subject_name = subject.subject_name;
+        this.subjectName = subject.subjectName;
         this.credits = subject.credits;
     }
 }

@@ -61,7 +61,7 @@ public class SubjectController {
     @SecurityRequirement(name= "Bearer Authentication")
     @PostMapping
     @PreAuthorize("hasAuthority('Admin')")
-    public EntityModel<Subject> insert(@Valid SubjectDTO subjectDTO) throws EntityWithExistingFieldException {
+    public EntityModel<Subject> insert(@RequestBody @Valid SubjectDTO subjectDTO) throws EntityWithExistingFieldException {
         Subject newSubj = subjectService.insert(subjectDTO);
         return EntityModel.of(newSubj,
                 linkTo(methodOn(SubjectController.class).get(newSubj.getId())).withSelfRel(),
@@ -72,7 +72,7 @@ public class SubjectController {
     @PutMapping(value = "/{id}")
     @PreAuthorize("hasAuthority('Admin')")
     public EntityModel<Subject> update(@PathVariable(name = "id") Integer subjectId,
-                                       @Valid SubjectDTO subjectDTO) throws EntityWithExistingFieldException {
+                                       @Valid @RequestBody SubjectDTO subjectDTO) throws EntityWithExistingFieldException {
         Subject updSubj = subjectService.update(subjectId, subjectDTO.toSubject());
         return EntityModel.of(updSubj,
                 linkTo(methodOn(SubjectController.class).get(updSubj.getId())).withSelfRel(),
@@ -83,7 +83,7 @@ public class SubjectController {
     @PatchMapping(value = "/{id}")
     @PreAuthorize("hasAuthority('Admin')")
     public EntityModel<Subject> patchSubscribable(@PathVariable(name = "id") Integer subjectId,
-                                                  @Valid SubjectSubcribeDTO subcribeDTO) {
+                                                  @Valid @RequestBody SubjectSubcribeDTO subcribeDTO) {
         Subject patched = subjectService.patchSubscribable(subjectId, subcribeDTO);
         return EntityModel.of(patched,
                 linkTo(methodOn(SubjectController.class).get(patched.getId())).withSelfRel(),

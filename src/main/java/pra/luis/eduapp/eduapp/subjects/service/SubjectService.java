@@ -38,7 +38,7 @@ public class SubjectService {
         return subjectRepository.save(subject);
     }
 
-    public FullSubjectDTO findById(Integer id){
+    public FullSubjectDTO findById(int id){
         Subject subject = subjectRepository.findById(id)
                 .orElseThrow(generateSubjectNotFoundException(id));
         return new FullSubjectDTO(subject);
@@ -69,10 +69,10 @@ public class SubjectService {
      * @param subcribeDTO
      * @return
      */
-    public Subject patchSubscribable(Integer id, SubjectSubcribeDTO subcribeDTO){
+    public Subject patchSubscribable(Integer id, SubjectSubcribeDTO subscribeDTO){
         return subjectRepository.findById(id)
                 .map((found) -> {
-                    found.setSubscribable(subcribeDTO.isSubscribable());
+                    found.setSubscribable(subscribeDTO.isSubscribable());
                     return subjectRepository.save(found);
                 })
                 .orElseThrow(generateSubjectNotFoundException(id));

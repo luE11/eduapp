@@ -17,7 +17,7 @@ public class FullSubjectDTO extends BaseSubjectDTO {
     // Listado cursos asociados
 
     public FullSubjectDTO(Subject subject) {
-        super(subject.getSubject_name(), subject.getCredits(), subject.isSubscribable());
+        super(subject.getSubjectName(), subject.getCredits(), subject.isSubscribable());
         this.programme = subject.getProgramme();
         this.requiredSubject = subject.getRequiredSubject();
     }
