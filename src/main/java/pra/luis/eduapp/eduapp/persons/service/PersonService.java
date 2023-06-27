@@ -71,6 +71,12 @@ public class PersonService {
         return null;
     }
 
+    public void deletePerson(Integer personId) {
+        if(!personRepository.existsById(personId))
+            throw new EntityNotFoundException("Unable to find person with id '"+ personId+"'");
+        personRepository.deleteById(personId);
+    }
+
     public Person update(int personId, Person updatedPerson){
         return personRepository.findById(personId)
                 .map( person -> {

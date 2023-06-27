@@ -36,6 +36,12 @@ public abstract class BasePersonDTO {
 
     public BasePersonDTO() { }
 
+    public BasePersonDTO(String firstName, String lastName, String email){
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
+
     public BasePersonDTO(String firstName, String lastName, Date birthDate, String email, String phoneNumber, String address) {
         this.firstName = firstName;
         this.lastName = lastName;

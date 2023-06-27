@@ -1,5 +1,6 @@
 package pra.luis.eduapp.eduapp.programmes.model;
 
+import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;

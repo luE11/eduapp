@@ -12,18 +12,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import pra.luis.eduapp.eduapp.persons.controller.PersonController;
-import pra.luis.eduapp.eduapp.persons.model.Person;
 import pra.luis.eduapp.eduapp.programmes.model.FullProgrammeDTO;
 import pra.luis.eduapp.eduapp.programmes.model.Programme;
 import pra.luis.eduapp.eduapp.programmes.model.ProgrammeDTO;
 import pra.luis.eduapp.eduapp.programmes.services.ProgrammeService;
 import pra.luis.eduapp.eduapp.utils.EntityListResponse;
 import pra.luis.eduapp.eduapp.utils.EntityWithExistingFieldException;
-
 import java.io.IOException;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -65,6 +62,26 @@ public class ProgrammeController {
         Programme programme = programmeService.insert(programmeDTO);
         return EntityModel.of(programme,
                 linkTo(methodOn(ProgrammeController.class).insert(programmeDTO)).withSelfRel());
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PutMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('Admin')")
+    public EntityModel<Programme> update(@PathVariable(name = "id", required = false) Integer programmeId,
+                                      @RequestBody @Valid ProgrammeDTO updateProgrammeDTO){
+        Programme updatedProgramme = programmeService.update(programmeId, updateProgrammeDTO.toProgramme());
+        return EntityModel.of(updatedProgramme,
+                linkTo(methodOn(ProgrammeController.class).update(programmeId, updateProgrammeDTO)).withSelfRel(),
+                linkTo(methodOn(ProgrammeController.class).get(programmeId)).withRel("user"),
+                linkTo(methodOn(ProgrammeController.class).getAll(null, null)).withRel("programmes"));
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('Admin')")
+    public ResponseEntity<?> delete(@PathVariable(name = "id", required = true) Integer personId) {
+        programmeService.delete(personId);
+        return ResponseEntity.noContent().build();
     }
 
 }

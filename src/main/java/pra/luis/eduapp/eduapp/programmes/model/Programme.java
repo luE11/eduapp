@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import pra.luis.eduapp.eduapp.persons.model.Person;
+import pra.luis.eduapp.eduapp.subjects.model.Subject;
 
 import java.util.Set;
 
@@ -26,6 +27,10 @@ public class Programme {
     @OneToMany(mappedBy="programme", targetEntity = Person.class)
     protected Set<Person> persons;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "programme", targetEntity = Subject.class)
+    protected Set<Subject> subjects;
+
     public Programme() {
     }
 
@@ -36,6 +41,10 @@ public class Programme {
     public Programme(String name, String logoUrl) {
         this.name = name;
         this.logoUrl = logoUrl;
+    }
+
+    public void updateProperties(Programme programme){
+        this.name = programme.getName();
     }
 
     @Override

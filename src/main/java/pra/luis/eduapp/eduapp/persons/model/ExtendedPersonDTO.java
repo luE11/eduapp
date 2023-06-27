@@ -17,10 +17,9 @@ public class ExtendedPersonDTO extends BasePersonDTO {
     public ExtendedPersonDTO() {
     }
 
-    public ExtendedPersonDTO(int[] roles, String firstName, String lastName, int programmeId) {
+    public ExtendedPersonDTO(int[] roles, String firstName, String lastName, String email, int programmeId) {
+        super(firstName, lastName, email);
         this.roles = roles;
-        this.firstName = firstName;
-        this.lastName = lastName;
         this.programmeId = programmeId;
     }
 

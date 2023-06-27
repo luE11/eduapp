@@ -10,6 +10,9 @@ Aplicación backend desarrollada con Spring boot, exponiendo servicios para la c
 - Protección de rutas para usuarios no autenticados
 - Generación y ejecución de pruebas unitarias y de integración (JUnit y Mockito)
 
+Se sigue el modelo entidad relación descrito a continuación:
+
+![image](./mer.png "Modelo entidad-relación proyecto")
 ### Herramientas empleadas
 
 | Herramienta | Versión |

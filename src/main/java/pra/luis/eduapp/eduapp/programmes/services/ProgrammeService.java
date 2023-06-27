@@ -26,8 +26,6 @@ public class ProgrammeService {
         return programmeRepository.findById(id);
     }
 
-
-
     public Page<Programme> findAll(Specification<Programme> spec, @NonNull Pageable pageable) {
         return programmeRepository.findAll(spec, pageable);
     }
@@ -42,19 +40,26 @@ public class ProgrammeService {
         return programmeRepository.save(programme);
     }
 
-    public int delete(Integer programmeId){
+    public Programme update(Integer programmeId, Programme updatedProgramme){
+        return programmeRepository.findById(programmeId)
+                .map( programme -> {
+                    programme.updateProperties(updatedProgramme);
+                    return programmeRepository.save(programme);
+                }).orElseThrow(() -> new EntityNotFoundException("Can't update unregistered person"));
+    }
+
+    public void delete(Integer programmeId){
         if(findById(programmeId).isEmpty())
             throw new EntityNotFoundException("Programme of id "+programmeId+" not founded");
         programmeRepository.deleteById(programmeId);
-        return programmeId;
     }
 
     private String getInitials(String phrase){
-        String initials = "";
+        StringBuilder initials = new StringBuilder();
         for (String s : phrase.split(" ")) {
-            initials+=s.charAt(0);
+            initials.append(s.charAt(0));
         }
-        return initials;
+        return initials.toString();
     }
 
 }

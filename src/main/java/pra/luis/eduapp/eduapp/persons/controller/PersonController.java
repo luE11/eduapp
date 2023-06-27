@@ -1,9 +1,9 @@
 package pra.luis.eduapp.eduapp.persons.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
+import net.kaczmarzyk.spring.data.jpa.domain.Equal;
 import net.kaczmarzyk.spring.data.jpa.domain.Like;
 import net.kaczmarzyk.spring.data.jpa.web.annotation.And;
 import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec;
@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -52,12 +53,13 @@ public class PersonController {
 
     @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping
-    @PreAuthorize("hasAuthority('Admin')")
+    @PreAuthorize("hasAnyAuthority('Admin', 'Teacher')")
     public EntityModel<EntityListResponse<Person>> getAll(
             @And({
             @Spec(path = "firstName", params = "firstName", spec = Like.class),
             @Spec(path = "lastName", params = "lastName", spec = Like.class),
-            @Spec(path = "email", params = "email", spec = Like.class)
+            @Spec(path = "email", params = "email", spec = Like.class),
+            @Spec(path = "programme", params = "programme", spec = Equal.class)
         }) Specification<Person> spec, Pageable pageable, Authentication auth){
         Page<Person> results = personService.findAll(spec, pageable, getPersonIdFromAuth(auth));
         return EntityModel.of(new EntityListResponse<>(results.getContent(), pageable.getPageNumber(),
@@ -75,6 +77,14 @@ public class PersonController {
                 linkTo(methodOn(PersonController.class).update(personId, updatePersonDTO)).withSelfRel(),
                 linkTo(methodOn(PersonController.class).get(personId, null)).withRel("user"),
                 linkTo(methodOn(PersonController.class).getAll(null, null, null)).withRel("users"));
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('Admin')")
+    public ResponseEntity<?> delete(@PathVariable(name = "id", required = true) Integer personId) {
+        personService.deletePerson(personId);
+        return ResponseEntity.noContent().build();
     }
 
     private int getPersonIdFromAuth(Authentication authentication){

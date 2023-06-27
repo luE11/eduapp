@@ -18,4 +18,6 @@ public @interface FileType {
     //represents additional information about annotation
     public Class<? extends Payload>[] payload() default {};
     String[] typesAllowed() default {};
+
+    boolean nullable() default true;
 }
