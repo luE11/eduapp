@@ -7,9 +7,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import pra.luis.eduapp.eduapp.auth.model.User;
+import pra.luis.eduapp.eduapp.courses.model.Course;
+import pra.luis.eduapp.eduapp.courses.model.CourseHasStudent;
 import pra.luis.eduapp.eduapp.programmes.model.Programme;
 
 import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -40,6 +43,12 @@ public class Person {
     @ManyToOne
     @JoinColumn(name="programme_id", nullable=false)
     protected Programme programme;
+    @JsonIgnore
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<CourseHasStudent> courses;
+    @JsonIgnore
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
+    private Set<Course> directedCourses;
 
     public Person() {
     }
@@ -80,5 +89,11 @@ public class Person {
         this.email = updatedPerson.email;
         this.phoneNumber = updatedPerson.phoneNumber;
         this.address = updatedPerson.address;
+    }
+    public Set<CourseHasStudent> getCourses() {
+        return courses;
+    }
+    public Set<Course> getDirectedCourses() {
+        return directedCourses;
     }
 }

@@ -57,7 +57,7 @@ public class ProgrammeController {
     @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAuthority('Admin')")
-    public EntityModel<Programme> insert(@Valid @ModelAttribute ProgrammeDTO programmeDTO)
+    public EntityModel<Programme> insert(@Valid @RequestBody ProgrammeDTO programmeDTO)
                             throws EntityWithExistingFieldException, IOException {
         Programme programme = programmeService.insert(programmeDTO);
         return EntityModel.of(programme,

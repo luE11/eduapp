@@ -64,6 +64,31 @@ CREATE TABLE subjects (
   CONSTRAINT sub_pk_sid PRIMARY KEY (subject_id)
 );
 
+CREATE TABLE courses (
+  course_id INT(11) NOT NULL AUTO_INCREMENT,
+  id_code VARCHAR(10) NOT NULL,
+  schedule VARCHAR(100) NOT NULL,
+  state ENUM('CREATED', 'ACTIVE', 'FINISHED') NOT NULL DEFAULT 'CREATED',
+  max_capacity INT(2),
+  subject_id INT(11) NOT NULL,
+  teacher_id INT(11) NOT NULL,
+  CONSTRAINT cou_pk_cid PRIMARY KEY (course_id)
+);
+
+CREATE TABLE courses_has_students (
+  course_id INT(11) NOT NULL,
+  person_id INT(11) NOT NULL,
+  final_grade DOUBLE,
+  is_subscribed TINYINT(1) NOT NULL DEFAULT 1
+);
+
+CREATE VIEW student_related_courses
+    AS SELECT row_number() over (order by s.subject_name) id, c.id_code, c.schedule, c.state, c.max_capacity, s.subject_name, +
+            p.email, cs.final_grade, cs.is_subscribed, cs.person_id
+            FROM courses c, courses_has_students cs, subjects s, persons p
+            WHERE c.course_id=cs.course_id AND c.subject_id=s.subject_id
+            AND c.teacher_id=p.person_id;
+
 -- ALTERS
 
 -- ROLES
@@ -105,6 +130,7 @@ ALTER TABLE persons ADD
   CONSTRAINT per_fk_pid FOREIGN KEY (programme_id)
     REFERENCES programmes(programme_id);
 
+-- SUBJECTS
 ALTER TABLE subjects ADD
   CONSTRAINT sub_uq_sna UNIQUE (subject_name);
 
@@ -114,3 +140,21 @@ ALTER TABLE subjects ADD
 ALTER TABLE subjects ADD
   CONSTRAINT sub_fk_rsi FOREIGN KEY (requiredsubject_id)
     REFERENCES subjects(subject_id);
+
+-- COURSES
+ALTER TABLE courses ADD
+  CONSTRAINT cou_uq_idc UNIQUE (id_code);
+ALTER TABLE courses ADD
+  CONSTRAINT cou_fk_sui FOREIGN KEY (subject_id)
+   REFERENCES subjects(subject_id);
+ALTER TABLE courses ADD
+  CONSTRAINT cou_fk_tei FOREIGN KEY (teacher_id)
+   REFERENCES persons(person_id);
+
+-- COURSES_HAS_STUDENTS
+ALTER TABLE courses_has_students ADD
+  CONSTRAINT chs_fk_pid FOREIGN KEY (person_id)
+	REFERENCES persons(person_id);
+ALTER TABLE courses_has_students ADD
+  CONSTRAINT chs_fk_cid FOREIGN KEY (course_id)
+    REFERENCES courses(course_id);

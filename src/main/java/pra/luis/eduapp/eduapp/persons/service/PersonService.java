@@ -77,16 +77,22 @@ public class PersonService {
         personRepository.deleteById(personId);
     }
 
-    public Person update(int personId, Person updatedPerson){
-        return personRepository.findById(personId)
-                .map( person -> {
-                    person.updateProperties(updatedPerson);
-                    return personRepository.save(person);
-                }).orElseThrow(() -> new EntityNotFoundException("Can't update unregistered person"));
+    public Person update(int personId, Person updatedPerson) throws EntityWithExistingFieldException {
+        Person person = getById(personId);
+        checkUpdateEmail(person, updatedPerson);
+        person.updateProperties(updatedPerson);
+        return personRepository.save(person);
     }
 
-    public Optional<Person> getById(int id){
-        return personRepository.findById(id);
+    private void checkUpdateEmail(Person person, Person updatedPerson) throws EntityWithExistingFieldException {
+        if(person.getEmail().compareTo(updatedPerson.getEmail())!=0
+                && isEmailAlreadyRegistered(updatedPerson.getEmail()))
+            throw new EntityWithExistingFieldException("The email "+ updatedPerson.getEmail()+" is already registered");
+    }
+
+    public Person getById(int id){
+        return personRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Unable to find person with id '"+id+"'"));
     }
 
     public int getIdByUsername(String username){
