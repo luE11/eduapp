@@ -34,7 +34,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        return generateHandlerWithErrorsAndMessage(HttpStatus.BAD_REQUEST, "Argument not valid", ex);
+        return generateHandlerWithErrorsAndMessage(HttpStatus.BAD_REQUEST, "Argument is invalid", ex);
     }
 
 	@ExceptionHandler(EntityNotFoundException.class)
@@ -62,6 +62,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 		return generateHandlerWithMessage(HttpStatus.CONFLICT, ex.getMessage());
 	}
 
+	/**
+	 * File access denied exception
+	 * @param ex
+	 * @return
+	 */
 	@ExceptionHandler(AccessDeniedException.class)
 	protected ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex) {
 		return generateHandlerWithMessage(HttpStatus.UNAUTHORIZED,
@@ -71,6 +76,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(TokenRefreshException.class)
 	protected ResponseEntity<Object> handleTokenRefreshException(TokenRefreshException ex) {
 		return generateHandlerWithMessage(HttpStatus.UNAUTHORIZED, ex.getMessage());
+	}
+
+	@ExceptionHandler(OperationNotAllowedException.class)
+	protected ResponseEntity<Object> handleOperationNotAllowedException(OperationNotAllowedException ex) {
+		return generateHandlerWithMessage(HttpStatus.CONFLICT, ex.getMessage());
 	}
 
 	// DEFAULT HANDLER

@@ -93,4 +93,9 @@ public class SubjectService {
     private Supplier<EntityNotFoundException> generateSubjectNotFoundException(Integer id){
         return () -> new EntityNotFoundException("Subject of id "+id+ " not found");
     }
+
+    public Subject getSubjectById(int id) {
+        return subjectRepository.findById(id)
+                .orElseThrow(generateSubjectNotFoundException(id));
+    }
 }

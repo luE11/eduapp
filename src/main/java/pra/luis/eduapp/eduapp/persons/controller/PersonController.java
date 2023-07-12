@@ -36,8 +36,7 @@ public class PersonController {
     @GetMapping(value = "/{id}")
     public EntityModel<Person> get(@PathVariable(name = "id", required = false) Integer personId, Authentication authentication){
         int requiredPersonId = (personId != null) ? personId : getPersonIdFromAuth(authentication);
-        Person person = personService.getById(requiredPersonId)
-                .orElseThrow(() -> new EntityNotFoundException("Unable to find person with id '"+requiredPersonId+"'"));
+        Person person = personService.getById(requiredPersonId);
         return EntityModel.of(person,
                 linkTo(methodOn(PersonController.class).get(requiredPersonId, null)).withSelfRel());
     }
@@ -71,7 +70,7 @@ public class PersonController {
     @PutMapping(value = "/{id}")
     @PreAuthorize("hasAuthority('Admin')")
     public EntityModel<Person> update(@PathVariable(name = "id", required = false) Integer personId,
-                                      @RequestBody @Valid PersonDTO updatePersonDTO){
+                                      @RequestBody @Valid PersonDTO updatePersonDTO) throws EntityWithExistingFieldException {
         Person updatedPerson = personService.update(personId, updatePersonDTO.toPersonObject());
         return EntityModel.of(updatedPerson,
                 linkTo(methodOn(PersonController.class).update(personId, updatePersonDTO)).withSelfRel(),
